@@ -2,6 +2,7 @@ package com.example.mvvmweatherapp.ui.presentation.setting
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.example.mvvmweatherapp.domain.LocalRepository
 import com.example.mvvmweatherapp.domain.LocationTracker
 import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository,
     private val locationTracker: LocationTracker
 ) : BaseViewModel() {
 
@@ -70,6 +72,32 @@ class SettingViewModel @Inject constructor(
             }
         )
 
+    }
+
+    fun writeToDataStore() {
+        makeSuspendCall(
+            block = {
+                localRepository.writeToDataStore("test")
+            },
+            onSuccess = {
+                _cityName.value = Resource.Success("successFully wrote")
+            }
+        )
+    }
+
+    fun readFromDataStore() {
+        makeSuspendCall(
+            block = {
+                localRepository.readFromDataStore()
+            },
+            onSuccess = { value ->
+                value?.let {
+                    _cityName.value = Resource.Success("value : $it")
+                } ?: run {
+                    _cityName.value = Resource.Success("not found")
+                }
+            }
+        )
     }
 
 }
