@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel : ViewModel() {
 
@@ -16,22 +15,16 @@ abstract class BaseViewModel : ViewModel() {
         }
     }
 
-    private suspend fun <R> makeSuspendCall(block: suspend () -> R): Result<R> {
-        return withContext(Dispatchers.IO) {
-            runCatching(block)
-        }
-    }
-
     protected fun <R> makeSuspendCall(
         block: suspend () -> R,
         onSuccess: ((R) -> Unit)? = null,
         onError: ((Exception) -> Unit)? = null,
         onLoading: (() -> Unit)? = null
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             onLoading?.invoke()
-            makeSuspendCall(block).apply {
+            runCatching(block).apply {
                 try {
                     val result = getOrThrow()
                     onSuccess?.invoke(result)
