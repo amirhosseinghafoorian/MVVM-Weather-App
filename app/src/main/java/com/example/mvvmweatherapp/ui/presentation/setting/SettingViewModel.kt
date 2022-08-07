@@ -27,6 +27,13 @@ class SettingViewModel @Inject constructor(
             },
             onSuccess = {
                 _cityLocation.value = Resource.Success(it)
+            },
+            onError = { exception ->
+                if (exception is IndexOutOfBoundsException) {
+                    // todo Invalid cityName
+                } else {
+                    // todo Internet problem
+                }
             }
         )
     }
