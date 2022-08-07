@@ -2,6 +2,7 @@ package com.example.mvvmweatherapp.ui.presentation.setting
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import com.example.mvvmweatherapp.ui.util.Resource.Empty
@@ -9,20 +10,41 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingViewModel @Inject constructor() : BaseViewModel() {
+class SettingViewModel @Inject constructor(
+    private val remoteRepository: RemoteRepository
+) : BaseViewModel() {
 
-    private val _state = mutableStateOf<Resource<String>>(Empty())
-    val state: State<Resource<String>> = _state
+    private val _cityName = mutableStateOf<Resource<String>>(Empty())
+    val cityName: State<Resource<String>> = _cityName
 
-    init {
+    private val _cityLocation = mutableStateOf<Resource<Pair<Double, Double>>>(Empty())
+    val cityLocation: State<Resource<Pair<Double, Double>>> = _cityLocation
+
+    fun getCityLocation(cityName: String) {
         makeSuspendCall(
             block = {
-                ""
+                remoteRepository.getCityLocationFromName(cityName)
             },
             onSuccess = {
-                _state.value = Resource.Success(it)
+                _cityLocation.value = Resource.Success(it)
             }
         )
+    }
+
+    fun getCityName() {
+        cityLocation.value.data?.let {
+            makeSuspendCall(
+                block = {
+                    remoteRepository.getCityNameFromLocation(
+                        latitude = it.first,
+                        longitude = it.second
+                    )
+                },
+                onSuccess = {
+                    _cityName.value = Resource.Success(it)
+                }
+            )
+        }
     }
 
 }

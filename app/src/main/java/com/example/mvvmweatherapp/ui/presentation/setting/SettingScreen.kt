@@ -31,7 +31,7 @@ fun SettingScreen(
 ) {
     Scaffold(scaffoldState = rememberScaffoldState()) {
         Column {
-            when (viewModel.state.value) {
+            when (viewModel.cityName.value) {
                 is Resource.Empty -> {
                     Text("empty")
                 }
@@ -42,7 +42,26 @@ fun SettingScreen(
                     Text("Loading")
                 }
                 is Resource.Success -> {
-                    Text("Success")
+                    Text(viewModel.cityName.value.data.toString())
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (viewModel.cityLocation.value) {
+                is Resource.Empty -> {
+                    Text("empty")
+                }
+                is Resource.Error -> {
+                    Text("Error")
+                }
+                is Resource.Loading -> {
+                    Text("Loading")
+                }
+                is Resource.Success -> {
+                    viewModel.cityLocation.value.data?.let {
+                        Text("lat : ${it.first}, lon : ${it.second}")
+                    }
                 }
             }
 
@@ -58,6 +77,26 @@ fun SettingScreen(
                 }
             ) {
                 Text("back to home")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    viewModel.getCityLocation("London")
+                }
+            ) {
+                Text("get London Location")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    viewModel.getCityName()
+                }
+            ) {
+                Text("get City name")
             }
         }
     }
