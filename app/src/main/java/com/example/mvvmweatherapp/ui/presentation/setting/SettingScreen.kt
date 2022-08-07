@@ -1,6 +1,8 @@
 package com.example.mvvmweatherapp.ui.presentation.setting
 
-import androidx.activity.result.ActivityResultLauncher
+import android.Manifest
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +33,27 @@ fun SettingScreen(
     navController: NavController,
     viewModel: SettingViewModel
 ) {
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissionsMapResult ->
+
+        val fineLocationAccessResult: Boolean? =
+            permissionsMapResult[Manifest.permission.ACCESS_FINE_LOCATION]
+        val coarseLocationAccessResult: Boolean? =
+            permissionsMapResult[Manifest.permission.ACCESS_COARSE_LOCATION]
+
+        val isAllPermissionsGranted = fineLocationAccessResult != null &&
+                coarseLocationAccessResult != null &&
+                fineLocationAccessResult == true &&
+                fineLocationAccessResult == true
+
+        if (isAllPermissionsGranted) {
+            viewModel.getCurrentLocation()
+        } else {
+            // todo permissions not granted"
+        }
+    }
+
     Scaffold(scaffoldState = rememberScaffoldState()) {
         Column {
             when (viewModel.cityName.value) {
@@ -105,7 +128,12 @@ fun SettingScreen(
 
             Button(
                 onClick = {
-                    viewModel.getCurrentLocation()
+                    permissionLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                        )
+                    )
                 }
             ) {
                 Text("get current location")

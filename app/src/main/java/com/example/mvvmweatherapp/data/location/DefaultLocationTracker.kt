@@ -21,10 +21,12 @@ class DefaultLocationTracker @Inject constructor(
 ): LocationTracker {
 
     override suspend fun getCurrentLocation(): Location? {
+
         val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
             application,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
+
         val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
             application,
             Manifest.permission.ACCESS_COARSE_LOCATION

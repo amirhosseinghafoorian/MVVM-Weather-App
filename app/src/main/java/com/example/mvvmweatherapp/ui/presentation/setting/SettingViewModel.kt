@@ -64,9 +64,9 @@ class SettingViewModel @Inject constructor(
             },
             onSuccess = { location ->
                 location?.let {
-                    Log.d("baby", "lat : ${location.latitude} , lon : ${location.longitude}")
+                    // todo location.latitude location.longitude available
                 } ?: run {
-                    Log.d("baby", "location failed")
+                    // todo location failed"
                 }
             }
         )
