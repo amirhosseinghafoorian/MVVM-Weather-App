@@ -14,6 +14,6 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideTestRepository(remoteRepositoryImpl: RemoteRepositoryImpl): RemoteRepository
+    abstract fun provideRemoteRepository(remoteRepositoryImpl: RemoteRepositoryImpl): RemoteRepository
 
 }

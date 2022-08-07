@@ -1,7 +1,9 @@
 package com.example.mvvmweatherapp.ui.presentation.setting
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.example.mvvmweatherapp.domain.LocationTracker
 import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
@@ -11,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
+    private val remoteRepository: RemoteRepository,
+    private val locationTracker: LocationTracker
 ) : BaseViewModel() {
 
     private val _cityName = mutableStateOf<Resource<String>>(Empty())
@@ -52,6 +55,22 @@ class SettingViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun getCurrentLocation() {
+        makeSuspendCall(
+            block = {
+                locationTracker.getCurrentLocation()
+            },
+            onSuccess = { location ->
+                location?.let {
+                    Log.d("baby", "lat : ${location.latitude} , lon : ${location.longitude}")
+                } ?: run {
+                    Log.d("baby", "location failed")
+                }
+            }
+        )
+
     }
 
 }

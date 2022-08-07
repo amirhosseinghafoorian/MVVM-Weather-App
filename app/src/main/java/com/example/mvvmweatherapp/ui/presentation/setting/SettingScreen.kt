@@ -1,5 +1,7 @@
 package com.example.mvvmweatherapp.ui.presentation.setting
 
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -97,6 +99,16 @@ fun SettingScreen(
                 }
             ) {
                 Text("get City name")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    viewModel.getCurrentLocation()
+                }
+            ) {
+                Text("get current location")
             }
         }
     }
