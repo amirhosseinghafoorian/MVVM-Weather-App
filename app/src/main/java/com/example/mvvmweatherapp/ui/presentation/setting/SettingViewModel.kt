@@ -122,6 +122,12 @@ class SettingViewModel @Inject constructor(
                         }
                     }
                 }
+            },
+            onLoading = {
+                viewModelScope.launch {
+                    // todo crash fixed but ui does not update
+                    _isLocationFromGPS.value = Loading()
+                }
             }
         )
     }
