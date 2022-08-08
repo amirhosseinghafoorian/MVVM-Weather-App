@@ -3,19 +3,18 @@ package com.example.mvvmweatherapp.ui.presentation.setting
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mvvmweatherapp.ui.util.Resource
+import com.example.mvvmweatherapp.ui.util.Resource.*
 
 @Composable
 fun SettingScreen(
@@ -49,40 +48,74 @@ fun SettingScreen(
         if (isAllPermissionsGranted) {
             viewModel.getCurrentLocation()
         } else {
-            // todo permissions not granted"
+            // todo show snackbar permissions not granted"
         }
     }
 
     Scaffold(scaffoldState = rememberScaffoldState()) {
         Column {
-            when (viewModel.cityName.value) {
-                is Resource.Empty -> {
-                    Text("empty")
-                }
-                is Resource.Error -> {
-                    Text("Error")
-                }
-                is Resource.Loading -> {
-                    Text("Loading")
-                }
-                is Resource.Success -> {
-                    Text(viewModel.cityName.value.data.toString())
+
+            Text("select your location type")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                when (viewModel.cityName.value) {
+                    is Empty, is Success -> {
+                        Button(
+                            modifier = Modifier.background(
+                                if (viewModel.isLocationFromGPS.value.data == true) Color.Green
+                                else Color.Red
+                            ),
+                            onClick = {
+                                viewModel.changeLocationType(true)
+                                permissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    )
+                                )
+                            }
+                        ) {
+                            Text("GPS")
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Button(
+                            modifier = Modifier.background(
+                                if (viewModel.isLocationFromGPS.value.data == false) Color.Green
+                                else Color.Red
+                            ),
+                            onClick = {
+                                viewModel.changeLocationType(false)
+                            }
+                        ) {
+                            Text("Input city name")
+                        }
+                    }
+                    is Loading -> {
+                        LinearProgressIndicator()
+                    }
+                    else -> {}
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             when (viewModel.cityLocation.value) {
-                is Resource.Empty -> {
+                is Empty -> {
                     Text("empty")
                 }
-                is Resource.Error -> {
+                is Error -> {
                     Text("Error")
                 }
-                is Resource.Loading -> {
+                is Loading -> {
                     Text("Loading")
                 }
-                is Resource.Success -> {
+                is Success -> {
                     viewModel.cityLocation.value.data?.let {
                         Text("lat : ${it.first}, lon : ${it.second}")
                     }
@@ -121,21 +154,6 @@ fun SettingScreen(
                 }
             ) {
                 Text("get City name")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    permissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                        )
-                    )
-                }
-            ) {
-                Text("get current location")
             }
         }
     }

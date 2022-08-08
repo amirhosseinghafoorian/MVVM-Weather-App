@@ -2,13 +2,15 @@ package com.example.mvvmweatherapp.ui.presentation.setting
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
 import com.example.mvvmweatherapp.domain.LocalRepository
 import com.example.mvvmweatherapp.domain.LocationTracker
 import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
-import com.example.mvvmweatherapp.ui.util.Resource.Empty
+import com.example.mvvmweatherapp.ui.util.Resource.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,11 +20,33 @@ class SettingViewModel @Inject constructor(
     private val locationTracker: LocationTracker
 ) : BaseViewModel() {
 
+    private val _isLocationFromGPS = mutableStateOf<Resource<Boolean>>(Empty())
+    val isLocationFromGPS: State<Resource<Boolean>> = _isLocationFromGPS
+
     private val _cityName = mutableStateOf<Resource<String>>(Empty())
     val cityName: State<Resource<String>> = _cityName
 
     private val _cityLocation = mutableStateOf<Resource<Pair<Double, Double>>>(Empty())
     val cityLocation: State<Resource<Pair<Double, Double>>> = _cityLocation
+
+    init {
+        getLocationType()
+        getSavedLatAndLon()
+    }
+
+    fun getCityName(latitude: Double, longitude: Double) {
+        makeSuspendCall(
+            block = {
+                remoteRepository.getCityNameFromLocation(latitude, longitude)
+            },
+            onSuccess = {
+                _cityName.value = Success(it)
+            },
+            onLoading = {
+                _cityName.value = Loading()
+            }
+        )
+    }
 
     fun getCityLocation(cityName: String) {
         makeSuspendCall(
@@ -30,7 +54,8 @@ class SettingViewModel @Inject constructor(
                 remoteRepository.getCityLocationFromName(cityName)
             },
             onSuccess = {
-                _cityLocation.value = Resource.Success(it)
+                _cityLocation.value = Success(it) // todo should be changed
+                saveLatAndLon(it.first, it.second)
             },
             onError = { exception ->
                 if (exception is IndexOutOfBoundsException) {
@@ -42,22 +67,6 @@ class SettingViewModel @Inject constructor(
         )
     }
 
-    fun getCityName() {
-        cityLocation.value.data?.let {
-            makeSuspendCall(
-                block = {
-                    remoteRepository.getCityNameFromLocation(
-                        latitude = it.first,
-                        longitude = it.second
-                    )
-                },
-                onSuccess = {
-                    _cityName.value = Resource.Success(it)
-                }
-            )
-        }
-    }
-
     fun getCurrentLocation() {
         makeSuspendCall(
             block = {
@@ -65,39 +74,66 @@ class SettingViewModel @Inject constructor(
             },
             onSuccess = { location ->
                 location?.let {
-                    // todo location.latitude location.longitude available
+                    saveLatAndLon(it.latitude, it.longitude)
                 } ?: run {
                     // todo location failed"
                 }
             }
         )
-
     }
 
-    fun writeToDataStore() {
+    private fun saveLatAndLon(latitude: Double, longitude: Double) {
         makeSuspendCall(
             block = {
-                localRepository.writeToDataStore("test")
-            },
-            onSuccess = {
-                _cityName.value = Resource.Success("successFully wrote")
+                localRepository.saveLatAndLon(latitude, longitude)
             }
         )
     }
 
-    fun readFromDataStore() {
+    private fun getSavedLatAndLon() {
         makeSuspendCall(
             block = {
-                localRepository.readFromDataStore()
+                localRepository.getSavedLatAndLon()
             },
-            onSuccess = { value ->
-                value?.let {
-                    _cityName.value = Resource.Success("value : $it")
-                } ?: run {
-                    _cityName.value = Resource.Success("not found")
+            onSuccess = { latAndLonFlow ->
+                viewModelScope.launch {
+                    latAndLonFlow.collect { latAndLon ->
+                        if (latAndLon.first != null && latAndLon.second != null) {
+                            getCityName(latAndLon.first!!, latAndLon.second!!)
+                        }
+                    }
                 }
             }
         )
+    }
+
+    private fun getLocationType() {
+        makeSuspendCall(
+            block = {
+                localRepository.getLocationType()
+            },
+            onSuccess = { resultFlow ->
+                viewModelScope.launch {
+                    resultFlow.collect { value ->
+                        value?.let {
+                            _isLocationFromGPS.value = Success(it)
+                        } ?: run {
+                            _isLocationFromGPS.value = Empty()
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    fun changeLocationType(newLocationType: Boolean) {
+        if (newLocationType != isLocationFromGPS.value.data) {
+            makeSuspendCall(
+                block = {
+                    localRepository.changeLocationType(newLocationType)
+                }
+            )
+        }
     }
 
 }
