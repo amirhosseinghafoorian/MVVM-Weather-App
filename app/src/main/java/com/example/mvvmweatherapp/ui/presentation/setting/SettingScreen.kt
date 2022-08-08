@@ -145,16 +145,6 @@ fun SettingScreen(
             ) {
                 Text("get London Location")
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    viewModel.getCityName()
-                }
-            ) {
-                Text("get City name")
-            }
         }
     }
 }
