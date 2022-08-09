@@ -60,7 +60,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                when (viewModel.cityName.value) {
+                when (viewModel.isLocationFromGPS.value) {
                     is Empty, is Success -> {
                         Button(
                             modifier = Modifier.background(
