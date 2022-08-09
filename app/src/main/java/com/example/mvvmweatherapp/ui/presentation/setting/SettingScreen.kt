@@ -6,14 +6,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mvvmweatherapp.ui.util.Resource
 import com.example.mvvmweatherapp.ui.util.Resource.*
 
 @Composable
@@ -101,49 +99,50 @@ fun SettingScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            when (viewModel.cityLocation.value) {
-                is Empty -> {
-                    Text("empty")
-                }
-                is Error -> {
-                    Text("Error")
-                }
-                is Loading -> {
-                    Text("Loading")
-                }
+            when (viewModel.cityName.value) {
                 is Success -> {
-                    viewModel.cityLocation.value.data?.let {
-                        Text("lat : ${it.first}, lon : ${it.second}")
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text("city name is : ")
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(viewModel.cityName.value.data!!)
                     }
                 }
+                is Loading -> {
+                    CircularProgressIndicator()
+                }
+                else -> {}
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Setting")
+            if (viewModel.isLocationFromGPS.value.data == false) {
+                Row(Modifier.fillMaxWidth()) {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                    var textFieldValue by remember {
+                        mutableStateOf("")
+                    }
 
-            Button(
-                onClick = {
-                    navController.navigateUp()
+                    TextField(
+                        value = textFieldValue,
+                        onValueChange = {
+                            textFieldValue = it
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Button(
+                        onClick = {
+                            viewModel.getCityLocation(textFieldValue)
+                        }
+                    ) {
+                        Text("confirm")
+                    }
                 }
-            ) {
-                Text("back to home")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    viewModel.getCityLocation("London")
-                }
-            ) {
-                Text("get London Location")
             }
         }
     }

@@ -34,7 +34,7 @@ class SettingViewModel @Inject constructor(
         getSavedLatAndLon()
     }
 
-    fun getCityName(latitude: Double, longitude: Double) {
+    private fun getCityName(latitude: Double, longitude: Double) {
         makeSuspendCall(
             block = {
                 remoteRepository.getCityNameFromLocation(latitude, longitude)
@@ -54,7 +54,6 @@ class SettingViewModel @Inject constructor(
                 remoteRepository.getCityLocationFromName(cityName)
             },
             onSuccess = {
-                _cityLocation.value = Success(it) // todo should be changed
                 saveLatAndLon(it.first, it.second)
             },
             onError = { exception ->
