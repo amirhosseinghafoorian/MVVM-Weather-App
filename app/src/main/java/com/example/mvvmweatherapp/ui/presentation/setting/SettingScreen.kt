@@ -14,9 +14,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mvvmweatherapp.ui.components.SnackbarObserver
 import com.example.mvvmweatherapp.ui.util.Resource.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
@@ -56,20 +55,13 @@ fun SettingScreen(
     }
 
     val scaffoldState = rememberScaffoldState()
-    var textFieldValue by remember {
-        mutableStateOf("")
-    }
-    val scope = rememberCoroutineScope()
+    var textFieldValue by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current // todo maybe change
 
-    LaunchedEffect(scaffoldState.snackbarHostState) {
-        scope.launch {
-            viewModel.snackbarFlow.collectLatest { message ->
-                keyboardController?.hide()
-                scaffoldState.snackbarHostState.showSnackbar(message)
-            }
-        }
-    }
+    SnackbarObserver(
+        scaffoldState = scaffoldState,
+        snackbarFlow = viewModel.snackbarFlow
+    )
 
     Scaffold(scaffoldState = scaffoldState) {
         Column {
