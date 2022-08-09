@@ -8,7 +8,6 @@ import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,7 +44,6 @@ class HomeViewModel @Inject constructor(
     private fun getCityName(latitude: Double, longitude: Double) {
         makeSuspendCall(
             block = {
-                delay(5000)
                 remoteRepository.getCityNameFromLocation(latitude, longitude)
             },
             onSuccess = {

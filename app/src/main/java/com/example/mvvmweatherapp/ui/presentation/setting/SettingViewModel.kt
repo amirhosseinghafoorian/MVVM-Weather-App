@@ -22,6 +22,7 @@ class SettingViewModel @Inject constructor(
 
     private val _isLocationFromGPS = mutableStateOf<Resource<Boolean>>(Empty())
     val isLocationFromGPS: State<Resource<Boolean>> = _isLocationFromGPS
+    // todo maybe not resource
 
     private val _cityName = mutableStateOf<Resource<String>>(Empty())
     val cityName: State<Resource<String>> = _cityName
@@ -55,9 +56,9 @@ class SettingViewModel @Inject constructor(
             },
             onError = { exception ->
                 if (exception is IndexOutOfBoundsException) {
-                    // todo Invalid cityName
+                    showSnackbar("Invalid cityName")
                 } else {
-                    // todo Internet problem
+                    showSnackbar("Internet problem")
                 }
             }
         )
@@ -113,6 +114,7 @@ class SettingViewModel @Inject constructor(
                     resultFlow.collect { value ->
                         value?.let {
                             _isLocationFromGPS.value = Success(it)
+
                         } ?: run {
                             _isLocationFromGPS.value = Empty()
                         }

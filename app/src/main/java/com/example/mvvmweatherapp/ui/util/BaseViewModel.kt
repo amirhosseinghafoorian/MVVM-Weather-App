@@ -3,10 +3,21 @@ package com.example.mvvmweatherapp.ui.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel : ViewModel() {
+
+    private val _snackbarFlow = MutableSharedFlow<String>()
+    val snackbarFlow = _snackbarFlow.asSharedFlow()
+
+    protected fun showSnackbar(value: String) {
+        viewModelScope.launch {
+            _snackbarFlow.emit(value)
+        }
+    }
 
     private suspend fun <R> runCatching(block: suspend () -> R): Result<R> {
         return try {

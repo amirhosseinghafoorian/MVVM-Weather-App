@@ -7,12 +7,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mvvmweatherapp.ui.util.Resource.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
@@ -24,6 +28,7 @@ fun SettingScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SettingScreen(
     navController: NavController,
@@ -50,7 +55,23 @@ fun SettingScreen(
         }
     }
 
-    Scaffold(scaffoldState = rememberScaffoldState()) {
+    val scaffoldState = rememberScaffoldState()
+    var textFieldValue by remember {
+        mutableStateOf("")
+    }
+    val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current // todo maybe change
+
+    LaunchedEffect(scaffoldState.snackbarHostState) {
+        scope.launch {
+            viewModel.snackbarFlow.collectLatest { message ->
+                keyboardController?.hide()
+                scaffoldState.snackbarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    Scaffold(scaffoldState = scaffoldState) {
         Column {
 
             Text("select your location type")
@@ -120,28 +141,23 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (viewModel.isLocationFromGPS.value.data == false) {
-                Row(Modifier.fillMaxWidth()) {
-
-                    var textFieldValue by remember {
-                        mutableStateOf("")
+                TextField(
+                    value = textFieldValue,
+                    onValueChange = {
+                        textFieldValue = it
                     }
+                )
 
-                    TextField(
-                        value = textFieldValue,
-                        onValueChange = {
-                            textFieldValue = it
-                        }
-                    )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Button(
-                        onClick = {
-                            viewModel.getCityLocation(textFieldValue)
-                        }
-                    ) {
-                        Text("confirm")
+                Button(
+                    onClick = {
+                        viewModel.getCityLocation(textFieldValue)
+                        textFieldValue = ""
+                        keyboardController?.hide()
                     }
+                ) {
+                    Text("confirm")
                 }
             }
         }
