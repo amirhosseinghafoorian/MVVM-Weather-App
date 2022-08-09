@@ -26,9 +26,6 @@ class SettingViewModel @Inject constructor(
     private val _cityName = mutableStateOf<Resource<String>>(Empty())
     val cityName: State<Resource<String>> = _cityName
 
-    private val _cityLocation = mutableStateOf<Resource<Pair<Double, Double>>>(Empty())
-    val cityLocation: State<Resource<Pair<Double, Double>>> = _cityLocation
-
     init {
         getLocationType()
         getSavedLatAndLon()

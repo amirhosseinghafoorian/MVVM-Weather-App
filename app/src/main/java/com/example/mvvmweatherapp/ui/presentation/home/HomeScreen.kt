@@ -1,18 +1,14 @@
 package com.example.mvvmweatherapp.ui.presentation.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mvvmweatherapp.navigation.AppScreens.Setting_ROUTE
+import com.example.mvvmweatherapp.ui.util.Resource
 
 @Composable
 fun HomeScreen(
@@ -41,6 +37,26 @@ fun HomeScreen(
                 }
             ) {
                 Text("go to setting")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (viewModel.cityName.value) {
+                is Resource.Success -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text("city name is : ")
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(viewModel.cityName.value.data!!)
+                    }
+                }
+                is Resource.Loading -> {
+                    CircularProgressIndicator()
+                }
+                else -> {}
             }
         }
     }
