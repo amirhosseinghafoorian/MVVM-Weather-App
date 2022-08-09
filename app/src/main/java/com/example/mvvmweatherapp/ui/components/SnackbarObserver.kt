@@ -16,7 +16,7 @@ fun SnackbarObserver(
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
 
-    LaunchedEffect(scaffoldState) {
+    LaunchedEffect(scaffoldState.snackbarHostState) {
         coroutineScope.launch {
             snackbarFlow.collectLatest { message ->
                 scaffoldState.snackbarHostState.showSnackbar(message)
