@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui.components.NetworkChangeReceiver"
+        <receiver android:name=".ui.components.network_broadcast_receiver.NetworkChangeReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

@@ -1,4 +1,4 @@
-package com.example.mvvmweatherapp.ui.components
+package com.example.mvvmweatherapp.ui.components.network_broadcast_receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -1,41 +1,46 @@
 package com.example.mvvmweatherapp
 
-import android.os.Build
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.mvvmweatherapp.ui.components.BroadCastReceivers
-import com.example.mvvmweatherapp.ui.components.NetworkChangeReceiverManager
+import androidx.lifecycle.lifecycleScope
 import com.example.mvvmweatherapp.ui.theme.MVVMWeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private var networkChangeReceiverManager: NetworkChangeReceiverManager? = null
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // todo connectivity manager by philipp
-        } else {
-            networkChangeReceiverManager = BroadCastReceivers.networkChangeReceiverManager
+        lifecycleScope.launch {
+            viewModel.registerReceiverSharedFlow.collect { result ->
+                if (result.second) {
+                    registerReceiver(
+                        result.first,
+                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                    )
+                } else {
+                    unregisterReceiver(result.first)
+                }
+            }
         }
 
-        networkChangeReceiverManager?.registerReceiver(this)
+        viewModel.setupNetworkMonitoring()
 
         setContent {
             AppScreen()
         }
-    }
-
-    override fun onDestroy() {
-        networkChangeReceiverManager?.unregisterReceiver(this)
-        super.onDestroy()
     }
 }
 
