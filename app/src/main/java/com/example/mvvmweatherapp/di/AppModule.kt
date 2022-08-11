@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.example.mvvmweatherapp.ui.components.network_broadcast_receiver.NetworkChangeReceiver
 import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkMonitorCallback
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -54,5 +55,15 @@ object AppModule {
         }
         return result
     }
+
+    @Provides
+    @Singleton
+    fun profileNetworkChangeReceiver(): NetworkChangeReceiver {
+        val result by lazy {
+            NetworkChangeReceiver()
+        }
+        return result
+    }
+
 
 }

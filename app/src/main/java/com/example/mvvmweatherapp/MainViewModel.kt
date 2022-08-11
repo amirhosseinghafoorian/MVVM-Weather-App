@@ -3,7 +3,7 @@ package com.example.mvvmweatherapp
 import android.content.BroadcastReceiver
 import android.os.Build
 import androidx.lifecycle.viewModelScope
-import com.example.mvvmweatherapp.ui.components.network_broadcast_receiver.BroadCastReceivers
+import com.example.mvvmweatherapp.ui.components.network_broadcast_receiver.NetworkChangeReceiver
 import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkMonitorCallback
 import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkStates
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
@@ -16,13 +16,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val networkMonitorCallback: NetworkMonitorCallback
+    private val networkMonitorCallback: NetworkMonitorCallback,
+    private val networkChangeReceiver: NetworkChangeReceiver
 ) : BaseViewModel() {
 
     private var isNetworkMonitoringHandled = false
 
-    private val _registerReceiverSharedFlow = MutableSharedFlow<Pair<BroadcastReceiver, Boolean>>()
-    val registerReceiverSharedFlow = _registerReceiverSharedFlow.asSharedFlow()
+    private val _registerReceiverSharedFlow =
+        MutableSharedFlow<Pair<BroadcastReceiver, Boolean>>()
+    val registerReceiverSharedFlow =
+        _registerReceiverSharedFlow.asSharedFlow()
 
     fun setupNetworkMonitoring() {
         if (!isNetworkMonitoringHandled) {
@@ -42,7 +45,7 @@ class MainViewModel @Inject constructor(
 
                     _registerReceiverSharedFlow.emit(
                         Pair(
-                            BroadCastReceivers.networkChangeReceiver,
+                            networkChangeReceiver,
                             true
                         )
                     )
@@ -58,7 +61,7 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch {
                 _registerReceiverSharedFlow.emit(
                     Pair(
-                        BroadCastReceivers.networkChangeReceiver,
+                        networkChangeReceiver,
                         false
                     )
                 )
