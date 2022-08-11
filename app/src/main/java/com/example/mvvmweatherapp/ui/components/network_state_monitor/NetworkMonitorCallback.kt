@@ -32,7 +32,7 @@ class NetworkMonitorCallback @Inject constructor(
 
     }
 
-    fun unRegisterNetworkCallback(){
+    fun unRegisterNetworkCallback() {
         connectivityManager.unregisterNetworkCallback(this)
     }
 }
