@@ -3,8 +3,6 @@ package com.example.mvvmweatherapp.di
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -39,17 +37,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNetworkRequest(): NetworkRequest {
-        val result by lazy {
-            NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build()
-        }
-        return result
-    }
-
-    @Provides
-    @Singleton
     fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
         val result by lazy {
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -60,11 +47,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNetworkMonitorCallback(
-        networkRequest: NetworkRequest,
         connectivityManager: ConnectivityManager
     ): NetworkMonitorCallback {
         val result by lazy {
-            NetworkMonitorCallback(networkRequest, connectivityManager)
+            NetworkMonitorCallback(connectivityManager)
         }
         return result
     }

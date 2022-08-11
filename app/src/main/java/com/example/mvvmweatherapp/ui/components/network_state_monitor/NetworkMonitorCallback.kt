@@ -3,13 +3,11 @@ package com.example.mvvmweatherapp.ui.components.network_state_monitor
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
-import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class NetworkMonitorCallback @Inject constructor(
-    private val networkRequest: NetworkRequest,
     private val connectivityManager: ConnectivityManager
 ) : NetworkCallback() {
 
@@ -18,7 +16,6 @@ class NetworkMonitorCallback @Inject constructor(
 
     override fun onLost(network: Network) {
         super.onLost(network)
-
         _networkState.value = NetworkStates.Lost
     }
 
@@ -28,7 +25,7 @@ class NetworkMonitorCallback @Inject constructor(
     }
 
     fun registerNetworkCallback() {
-        connectivityManager.registerNetworkCallback(networkRequest, this)
+        connectivityManager.registerDefaultNetworkCallback(this)
 
     }
 
