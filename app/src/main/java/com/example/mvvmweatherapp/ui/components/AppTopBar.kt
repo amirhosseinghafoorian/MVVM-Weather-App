@@ -1,10 +1,7 @@
 package com.example.mvvmweatherapp.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -34,7 +31,12 @@ fun AppTopBar(
             .background(MaterialTheme.colors.primaryVariant),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        leadingIcon?.invoke()
+        Column(
+            modifier = Modifier.requiredSize(64.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            leadingIcon?.invoke()
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -49,7 +51,12 @@ fun AppTopBar(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        trailingIcon?.invoke()
+        Column(
+            modifier = Modifier.requiredSize(64.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            trailingIcon?.invoke()
+        }
     }
 
 }
