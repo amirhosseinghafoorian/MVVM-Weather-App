@@ -1,5 +1,7 @@
 package com.example.mvvmweatherapp.ui.presentation.setting
 
+import android.content.Context
+import android.os.Build
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import com.example.mvvmweatherapp.ui.util.Resource.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,7 +44,11 @@ class SettingViewModel @Inject constructor(
                 location?.let {
                     saveLatAndLon(it.latitude, it.longitude)
                 } ?: run {
-                    showSnackbar("location currently unavailable for android 12 or higher")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        showSnackbar("location currently unavailable for android 12 or higher")
+                    } else {
+                        showSnackbar("device location is turned off")
+                    }
                     changeLocationType(false)
                 }
             }
