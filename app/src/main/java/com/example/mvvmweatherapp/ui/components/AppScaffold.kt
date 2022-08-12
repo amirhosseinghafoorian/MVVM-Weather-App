@@ -8,13 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    topBar: @Composable () -> Unit = {},
+    showTopBar: Boolean = true,
+    topBarLeadingIcon: @Composable (() -> Unit)? = null,
+    topBarPageName: String? = null,
+    topBarTrailingIcon: @Composable (() -> Unit)? = null,
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable (SnackbarHostState) -> Unit = {
         SnackbarHost(hostState = it) { data ->
@@ -37,14 +39,21 @@ fun AppScaffold(
     drawerScrimColor: Color = DrawerDefaults.scrimColor,
     backgroundColor: Color = MaterialTheme.colors.background,
     contentColor: Color = contentColorFor(backgroundColor),
-    snackbarFlow: SharedFlow<String>? = null,
     content: @Composable (PaddingValues) -> Unit
 ) {
 
     Scaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
-        topBar = topBar,
+        topBar = {
+            if (showTopBar) {
+                AppTopBar(
+                    leadingIcon = topBarLeadingIcon,
+                    pageName = topBarPageName,
+                    trailingIcon = topBarTrailingIcon
+                )
+            }
+        },
         bottomBar = bottomBar,
         snackbarHost = snackbarHost,
         floatingActionButton = floatingActionButton,

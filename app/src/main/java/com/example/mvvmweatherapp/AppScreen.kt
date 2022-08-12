@@ -13,10 +13,12 @@ fun AppScreen() {
 
         val systemUiController = rememberSystemUiController()
         val backgroundColor = MaterialTheme.colors.background
+        val primaryVariantColor = MaterialTheme.colors.primaryVariant
         val isLight = MaterialTheme.colors.isLight
 
         SideEffect {
-            systemUiController.setSystemBarsColor(backgroundColor, isLight)
+            systemUiController.setNavigationBarColor(backgroundColor, isLight)
+            systemUiController.setStatusBarColor(primaryVariantColor, !isLight)
         }
 
         AppNavGraph()

@@ -67,7 +67,10 @@ fun SettingScreen(
         snackbarFlow = viewModel.snackbarFlow
     )
 
-    AppScaffold(scaffoldState = scaffoldState) {
+    AppScaffold(
+        scaffoldState = scaffoldState,
+        topBarPageName = "Setting"
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
