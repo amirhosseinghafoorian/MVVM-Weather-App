@@ -8,7 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.lifecycleScope
 import com.example.mvvmweatherapp.ui.theme.MVVMWeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +41,9 @@ class MainActivity : ComponentActivity() {
         viewModel.setupNetworkMonitoring()
 
         setContent {
-            AppScreen()
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                AppScreen()
+            }
         }
     }
 }
