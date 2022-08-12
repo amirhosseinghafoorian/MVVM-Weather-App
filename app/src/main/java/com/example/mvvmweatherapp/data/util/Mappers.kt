@@ -1,5 +1,10 @@
 package com.example.mvvmweatherapp.data.util
 
+import com.example.mvvmweatherapp.model.CurrentForecast
+import com.example.mvvmweatherapp.model.CurrentForecastEntity
+import com.example.mvvmweatherapp.model.SingleDayForecast
+import com.example.mvvmweatherapp.model.SingleDayForecastEntity
+
 fun Double.toCelsius() = (this - 273.15)
 
 fun Double.toLimitedTemp(): String {
@@ -13,3 +18,24 @@ fun String.getDate() = this
     .substringAfter('-')
     .substringBefore(' ')
     .replace('-', '/')
+
+fun CurrentForecastEntity.toCurrentForecast() =
+    CurrentForecast(
+        cityName = cityName,
+        description = description,
+        temperature = temperature
+    )
+
+fun SingleDayForecastEntity.toSingleDayForecast() =
+    SingleDayForecast(
+        id = id,
+        description = description,
+        date = date,
+        temperature = temperature
+    )
+
+fun List<SingleDayForecastEntity>.toSingleDayForecast(): List<SingleDayForecast> {
+    return this.map {
+        it.toSingleDayForecast()
+    }
+}

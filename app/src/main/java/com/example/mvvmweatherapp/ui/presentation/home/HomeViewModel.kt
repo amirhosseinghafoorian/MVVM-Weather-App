@@ -1,5 +1,6 @@
 package com.example.mvvmweatherapp.ui.presentation.home
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -22,7 +23,46 @@ class HomeViewModel @Inject constructor(
 
     init {
         getSavedLatAndLon()
-        // todo observe forecast database
+        getForecastData()
+    }
+
+    private fun getForecastData() {
+        makeSuspendCall(
+            block = {
+                localRepository.getCurrentForecast()
+            },
+            onSuccess = { flow ->
+                viewModelScope.launch {
+                    flow.collect { current ->
+                        Log.i(
+                            "baby",
+                            "${current.cityName} , ${current.description}"
+                        )
+                    }
+                }
+            }
+        )
+        makeSuspendCall(
+            block = {
+                localRepository.getThreeDayForecast()
+            },
+            onSuccess = { flow ->
+                viewModelScope.launch {
+                    flow.collect {
+                        Log.i(
+                            "baby",
+                            "size is ${it.size}"
+                        )
+//                        it.forEach { singleDay ->
+//                            Log.i(
+//                                "baby",
+//                                "day ${singleDay.id} , ${singleDay.date} , ${singleDay.description}"
+//                            )
+//                        }
+                    }
+                }
+            }
+        )
     }
 
     private fun getSavedLatAndLon() {

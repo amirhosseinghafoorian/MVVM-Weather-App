@@ -2,10 +2,11 @@ package com.example.mvvmweatherapp.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.mvvmweatherapp.model.TestEntity
+import com.example.mvvmweatherapp.model.CurrentForecastEntity
+import com.example.mvvmweatherapp.model.SingleDayForecastEntity
 
 @Database(
-    entities = [TestEntity::class],
+    entities = [CurrentForecastEntity::class, SingleDayForecastEntity::class],
     version = 1,
     exportSchema = false
 )
