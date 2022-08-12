@@ -7,16 +7,20 @@ import com.example.mvvmweatherapp.domain.LocalRepository
 import com.example.mvvmweatherapp.domain.RemoteRepository
 import com.example.mvvmweatherapp.model.CurrentForecast
 import com.example.mvvmweatherapp.model.SingleDayForecast
+import com.example.mvvmweatherapp.ui.components.InternetNotifier
+import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkStates
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val localRepository: LocalRepository,
-    private val remoteRepository: RemoteRepository
+    private val remoteRepository: RemoteRepository,
+    private val internetNotifier: InternetNotifier
 ) : BaseViewModel() {
 
     private val _hasSavedLatAndLon = mutableStateOf<Resource<Unit>>(Resource.Empty())
@@ -33,6 +37,19 @@ class HomeViewModel @Inject constructor(
     init {
         getSavedLatAndLon()
         getForecastData()
+        observeNetworkChanges()
+    }
+
+    private fun observeNetworkChanges() {
+        viewModelScope.launch(Dispatchers.IO) {
+            internetNotifier.notifyInternetSharedFlow.collect {
+                if (it == NetworkStates.Available) {
+                    updateForecastData()
+                } else if (it == NetworkStates.Lost) {
+                    showSnackbar("Internet connection lost")
+                }
+            }
+        }
     }
 
     private fun getForecastData() {

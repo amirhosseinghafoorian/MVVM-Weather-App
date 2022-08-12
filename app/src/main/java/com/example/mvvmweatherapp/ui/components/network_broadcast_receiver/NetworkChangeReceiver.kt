@@ -4,21 +4,24 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.util.Log
+import com.example.mvvmweatherapp.ui.components.InternetNotifier
+import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkStates
+import javax.inject.Inject
 
 
-class NetworkChangeReceiver : BroadcastReceiver() {
+class NetworkChangeReceiver @Inject constructor(
+    private val internetNotifier: InternetNotifier
+) : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
         if (p1?.action == ConnectivityManager.CONNECTIVITY_ACTION) {
             p0?.let { context ->
-                if (isOnline(context)){
-                    Log.i("baby", "changed to online")
+                if (isOnline(context)) {
+                    internetNotifier.onNetworkStateChanged(NetworkStates.Available)
                 } else {
-                    Log.i("baby", "changed to offline")
+                    internetNotifier.onNetworkStateChanged(NetworkStates.Lost)
                 }
             }
-            // todo do what ever you want
         }
     }
 
@@ -28,6 +31,5 @@ class NetworkChangeReceiver : BroadcastReceiver() {
         //should check null because in airplane mode it will be null
         return netInfo != null && netInfo.isConnected
     }
-
 
 }

@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.example.mvvmweatherapp.ui.components.InternetNotifier
 import com.example.mvvmweatherapp.ui.components.network_broadcast_receiver.NetworkChangeReceiver
 import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkMonitorCallback
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -48,22 +49,28 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNetworkMonitorCallback(
-        connectivityManager: ConnectivityManager
+        connectivityManager: ConnectivityManager,
+        internetNotifier: InternetNotifier
     ): NetworkMonitorCallback {
         val result by lazy {
-            NetworkMonitorCallback(connectivityManager)
+            NetworkMonitorCallback(connectivityManager, internetNotifier)
         }
         return result
     }
 
     @Provides
     @Singleton
-    fun profileNetworkChangeReceiver(): NetworkChangeReceiver {
+    fun profileNetworkChangeReceiver(
+        internetNotifier: InternetNotifier
+    ): NetworkChangeReceiver {
         val result by lazy {
-            NetworkChangeReceiver()
+            NetworkChangeReceiver(internetNotifier)
         }
         return result
     }
 
+    @Provides
+    @Singleton
+    fun provideInternetNotifier() = InternetNotifier()
 
 }

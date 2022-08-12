@@ -1,5 +1,6 @@
 package com.example.mvvmweatherapp.data.repository
 
+import android.util.Log
 import com.example.mvvmweatherapp.BuildConfig
 import com.example.mvvmweatherapp.data.database.WeatherDao
 import com.example.mvvmweatherapp.data.remote.WeatherApi
@@ -39,6 +40,7 @@ class RemoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateForecastData() {
+        Log.i("baby" , "called")
         val savedLatAndLon = localRepository.getSavedLatAndLon().first()
         if (savedLatAndLon.first != null && savedLatAndLon.second != null) {
 
