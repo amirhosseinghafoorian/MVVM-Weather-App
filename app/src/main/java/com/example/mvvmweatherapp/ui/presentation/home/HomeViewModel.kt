@@ -1,11 +1,12 @@
 package com.example.mvvmweatherapp.ui.presentation.home
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmweatherapp.domain.LocalRepository
 import com.example.mvvmweatherapp.domain.RemoteRepository
+import com.example.mvvmweatherapp.model.CurrentForecast
+import com.example.mvvmweatherapp.model.SingleDayForecast
 import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,14 @@ class HomeViewModel @Inject constructor(
     private val _hasSavedLatAndLon = mutableStateOf<Resource<Unit>>(Resource.Empty())
     val hasSavedLatAndLon: State<Resource<Unit>> = _hasSavedLatAndLon
 
+    private val _threeDayForecast =
+        mutableStateOf<Resource<List<SingleDayForecast>>>(Resource.Empty())
+    val threeDayForecast: State<Resource<List<SingleDayForecast>>> = _threeDayForecast
+
+    private val _currentDayForecast =
+        mutableStateOf<Resource<List<CurrentForecast>>>(Resource.Empty())
+    val currentDayForecast: State<Resource<List<CurrentForecast>>> = _currentDayForecast
+
     init {
         getSavedLatAndLon()
         getForecastData()
@@ -33,11 +42,8 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 viewModelScope.launch {
-                    flow.collect { current ->
-                        Log.i(
-                            "baby",
-                            "${current.cityName} , ${current.description}"
-                        )
+                    flow.collect {
+                        if (it.isNotEmpty()) _currentDayForecast.value = Resource.Success(it)
                     }
                 }
             }
@@ -49,16 +55,7 @@ class HomeViewModel @Inject constructor(
             onSuccess = { flow ->
                 viewModelScope.launch {
                     flow.collect {
-                        Log.i(
-                            "baby",
-                            "size is ${it.size}"
-                        )
-//                        it.forEach { singleDay ->
-//                            Log.i(
-//                                "baby",
-//                                "day ${singleDay.id} , ${singleDay.date} , ${singleDay.description}"
-//                            )
-//                        }
+                        if (it.isNotEmpty()) _threeDayForecast.value = Resource.Success(it)
                     }
                 }
             }

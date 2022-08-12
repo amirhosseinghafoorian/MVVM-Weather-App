@@ -9,6 +9,6 @@ interface LocalRepository {
     suspend fun changeLocationType(isFromGPS: Boolean)
     suspend fun getSavedLatAndLon(): Flow<Pair<Double?, Double?>>
     suspend fun saveLatAndLon(latitude: Double, longitude: Double)
-    suspend fun getCurrentForecast(): Flow<CurrentForecast>
+    suspend fun getCurrentForecast(): Flow<List<CurrentForecast>>
     suspend fun getThreeDayForecast(): Flow<List<SingleDayForecast>>
 }

@@ -51,7 +51,7 @@ class LocalRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentForecast(): Flow<CurrentForecast> =
+    override suspend fun getCurrentForecast(): Flow<List<CurrentForecast>> =
         dao.getCurrentWeather().map {
             it.toCurrentForecast()
         }

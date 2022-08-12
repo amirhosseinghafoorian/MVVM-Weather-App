@@ -44,7 +44,7 @@ abstract class BaseViewModel : ViewModel() {
             onLoading?.invoke()
             makeSuspendCall(block).apply {
                 try {
-                    val result = getOrThrow()
+                    val result = this.getOrThrow()
                     onSuccess?.invoke(result)
                 } catch (e: Exception) {
                     onError?.invoke(e)

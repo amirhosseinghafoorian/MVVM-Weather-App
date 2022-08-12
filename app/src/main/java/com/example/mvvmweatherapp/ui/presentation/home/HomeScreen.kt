@@ -5,7 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mvvmweatherapp.navigation.AppScreens.Setting_ROUTE
-import com.example.mvvmweatherapp.ui.util.Resource
+import com.example.mvvmweatherapp.ui.util.Resource.*
 
 @Composable
 fun HomeScreen(
@@ -33,9 +36,13 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     Scaffold(scaffoldState = rememberScaffoldState()) {
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             when (viewModel.hasSavedLatAndLon.value) {
-                is Resource.Error -> {
+                is Error -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier
@@ -65,12 +72,16 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    navController.navigate(Setting_ROUTE)
+            when (viewModel.currentDayForecast.value) {
+                is Success -> {
+                    Text("success")
                 }
-            ) {
-                Text("go to setting")
+                is Empty -> {
+                    Text("empty")
+                }
+                else -> {
+                    Text("else")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

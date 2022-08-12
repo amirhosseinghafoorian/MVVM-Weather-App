@@ -17,8 +17,8 @@ interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSingleDayWeather(vararg singleDayWeather: SingleDayForecastEntity)
 
-    @Query("SELECT * FROM current_weather where id == 1")
-    fun getCurrentWeather(): Flow<CurrentForecastEntity>
+    @Query("SELECT * FROM current_weather")
+    fun getCurrentWeather(): Flow<List<CurrentForecastEntity>>
 
     @Query("SELECT * FROM single_day_weather")
     fun getThreeDayForecast(): Flow<List<SingleDayForecastEntity>>

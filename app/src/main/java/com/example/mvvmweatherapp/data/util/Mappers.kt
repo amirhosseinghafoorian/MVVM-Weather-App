@@ -26,6 +26,12 @@ fun CurrentForecastEntity.toCurrentForecast() =
         temperature = temperature
     )
 
+fun List<CurrentForecastEntity>.toCurrentForecast(): List<CurrentForecast> {
+    return this.map {
+        it.toCurrentForecast()
+    }
+}
+
 fun SingleDayForecastEntity.toSingleDayForecast() =
     SingleDayForecast(
         id = id,
