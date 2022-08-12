@@ -1,6 +1,5 @@
 package com.example.mvvmweatherapp.ui.presentation.setting
 
-import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +11,6 @@ import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import com.example.mvvmweatherapp.ui.util.Resource.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
