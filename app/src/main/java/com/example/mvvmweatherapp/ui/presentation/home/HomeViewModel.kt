@@ -35,12 +35,20 @@ class HomeViewModel @Inject constructor(
                     latAndLonFlow.collect { latAndLon ->
                         if (latAndLon.first != null && latAndLon.second != null) {
                             updateDistinct()
-                            // todo update forecast database with api
+                            updateForecastData()
                         } else {
                             _hasSavedLatAndLon.value = Resource.Error("")
                         }
                     }
                 }
+            }
+        )
+    }
+
+    private fun updateForecastData() {
+        makeSuspendCall(
+            block = {
+                remoteRepository.updateForecastData()
             }
         )
     }
