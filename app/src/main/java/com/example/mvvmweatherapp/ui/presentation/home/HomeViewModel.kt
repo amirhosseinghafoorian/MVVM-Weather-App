@@ -17,11 +17,12 @@ class HomeViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository
 ) : BaseViewModel() {
 
-    private val _cityName = mutableStateOf<Resource<String>>(Resource.Empty())
-    val cityName: State<Resource<String>> = _cityName
+    private val _hasSavedLatAndLon = mutableStateOf<Resource<Unit>>(Resource.Empty())
+    val hasSavedLatAndLon: State<Resource<Unit>> = _hasSavedLatAndLon
 
     init {
         getSavedLatAndLon()
+        // todo observe forecast database
     }
 
     private fun getSavedLatAndLon() {
@@ -33,7 +34,10 @@ class HomeViewModel @Inject constructor(
                 viewModelScope.launch {
                     latAndLonFlow.collect { latAndLon ->
                         if (latAndLon.first != null && latAndLon.second != null) {
-                            getCityName(latAndLon.first!!, latAndLon.second!!)
+                            updateDistinct()
+                            // todo update forecast database with api
+                        } else {
+                            _hasSavedLatAndLon.value = Resource.Error("")
                         }
                     }
                 }
@@ -41,18 +45,10 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun getCityName(latitude: Double, longitude: Double) {
-        makeSuspendCall(
-            block = {
-                remoteRepository.getCityNameFromLocation(latitude, longitude)
-            },
-            onSuccess = {
-                _cityName.value = Resource.Success(it)
-            },
-            onLoading = {
-                _cityName.value = Resource.Loading()
-            }
-        )
+    private fun updateDistinct() {
+        if (hasSavedLatAndLon.value !is Resource.Success) {
+            _hasSavedLatAndLon.value = Resource.Success(Unit)
+        }
     }
 
 }

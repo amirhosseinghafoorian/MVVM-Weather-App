@@ -1,9 +1,16 @@
 package com.example.mvvmweatherapp.ui.presentation.home
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -27,6 +34,33 @@ fun HomeScreen(
 ) {
     Scaffold(scaffoldState = rememberScaffoldState()) {
         Column {
+            when (viewModel.hasSavedLatAndLon.value) {
+                is Resource.Error -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                            .background(Color.Red.copy(alpha = 0.5f))
+                            .border(
+                                width = 1.dp,
+                                color = Color.Red,
+                                shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                            )
+                            .requiredHeight(64.dp)
+                            .clickable {
+                                navController.navigate(Setting_ROUTE)
+                            },
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Select location")
+                    }
+                }
+                else -> {}
+            }
+
             Text("Home")
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -41,23 +75,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            when (viewModel.cityName.value) {
-                is Resource.Success -> {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text("city name is : ")
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(viewModel.cityName.value.data!!)
-                    }
-                }
-                is Resource.Loading -> {
-                    CircularProgressIndicator()
-                }
-                else -> {}
-            }
+            // todo weather ui
         }
     }
 }
