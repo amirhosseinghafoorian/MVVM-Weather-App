@@ -11,6 +11,8 @@ import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import com.example.mvvmweatherapp.ui.util.Resource.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,12 +23,11 @@ class SettingViewModel @Inject constructor(
     private val locationTracker: LocationTracker
 ) : BaseViewModel() {
 
-    private val _isLocationFromGPS = mutableStateOf<Resource<Boolean>>(Empty())
-    val isLocationFromGPS: State<Resource<Boolean>> = _isLocationFromGPS
-    // todo maybe not resource
+    private val _isLocationFromGPS = MutableStateFlow<Resource<Boolean>>(Empty())
+    val isLocationFromGPS = _isLocationFromGPS.asStateFlow()
 
-    private val _cityName = mutableStateOf<Resource<String>>(Empty())
-    val cityName: State<Resource<String>> = _cityName
+    private val _cityName = MutableStateFlow<Resource<String>>(Empty())
+    val cityName = _cityName.asStateFlow()
 
     init {
         getLocationType()

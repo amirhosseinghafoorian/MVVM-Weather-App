@@ -103,11 +103,11 @@ fun SettingScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                when (viewModel.isLocationFromGPS.value) {
+                when (viewModel.isLocationFromGPS.collectAsState().value) {
                     is Empty, is Success -> {
                         AppButton(
                             modifier = Modifier.weight(1f),
-                            backgroundColor = if (viewModel.isLocationFromGPS.value.data == true) {
+                            backgroundColor = if (viewModel.isLocationFromGPS.collectAsState().value.data == true) {
                                 MaterialTheme.colors.secondary
                             } else {
                                 MaterialTheme.colors.primary
@@ -129,7 +129,7 @@ fun SettingScreen(
 
                         AppButton(
                             modifier = Modifier.weight(1f),
-                            backgroundColor = if (viewModel.isLocationFromGPS.value.data == false) {
+                            backgroundColor = if (viewModel.isLocationFromGPS.collectAsState().value.data == false) {
                                 MaterialTheme.colors.secondary
                             } else {
                                 MaterialTheme.colors.primary
@@ -148,9 +148,8 @@ fun SettingScreen(
                 }
             }
 
-            when (viewModel.cityName.value) {
+            when (viewModel.cityName.collectAsState().value) {
                 is Success -> {
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(
@@ -208,9 +207,9 @@ fun SettingScreen(
                 else -> {}
             }
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            if (viewModel.isLocationFromGPS.value.data == false) {
+            if (viewModel.isLocationFromGPS.collectAsState().value.data == false) {
                 AppTextField(
                     value = textFieldValue,
                     onValueChange = {

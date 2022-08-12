@@ -1,7 +1,5 @@
 package com.example.mvvmweatherapp.ui.presentation.home
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmweatherapp.domain.LocalRepository
 import com.example.mvvmweatherapp.domain.RemoteRepository
@@ -13,6 +11,8 @@ import com.example.mvvmweatherapp.ui.util.BaseViewModel
 import com.example.mvvmweatherapp.ui.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,16 +23,16 @@ class HomeViewModel @Inject constructor(
     private val internetNotifier: InternetNotifier
 ) : BaseViewModel() {
 
-    private val _hasSavedLatAndLon = mutableStateOf<Resource<Unit>>(Resource.Empty())
-    val hasSavedLatAndLon: State<Resource<Unit>> = _hasSavedLatAndLon
+    private val _hasSavedLatAndLon = MutableStateFlow<Resource<Unit>>(Resource.Empty())
+    val hasSavedLatAndLon = _hasSavedLatAndLon.asStateFlow()
 
     private val _threeDayForecast =
-        mutableStateOf<Resource<List<SingleDayForecast>>>(Resource.Empty())
-    val threeDayForecast: State<Resource<List<SingleDayForecast>>> = _threeDayForecast
+        MutableStateFlow<Resource<List<SingleDayForecast>>>(Resource.Empty())
+    val threeDayForecast = _threeDayForecast.asStateFlow()
 
     private val _currentDayForecast =
-        mutableStateOf<Resource<List<CurrentForecast>>>(Resource.Empty())
-    val currentDayForecast: State<Resource<List<CurrentForecast>>> = _currentDayForecast
+        MutableStateFlow<Resource<List<CurrentForecast>>>(Resource.Empty())
+    val currentDayForecast = _currentDayForecast.asStateFlow()
 
     init {
         getSavedLatAndLon()

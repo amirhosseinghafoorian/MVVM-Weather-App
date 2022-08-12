@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,7 +71,7 @@ fun HomeScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            when (viewModel.hasSavedLatAndLon.value) {
+            when (viewModel.hasSavedLatAndLon.collectAsState().value) {
                 is Error -> {
                     Row(
                         modifier = Modifier
@@ -112,7 +113,7 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                when (viewModel.currentDayForecast.value) {
+                when (viewModel.currentDayForecast.collectAsState().value) {
                     is Success -> {
                         Text(viewModel.currentDayForecast.value.data!![0].cityName)
 
@@ -131,7 +132,7 @@ fun HomeScreen(
                 }
             }
 
-            when (viewModel.threeDayForecast.value) {
+            when (viewModel.threeDayForecast.collectAsState().value) {
                 is Success -> {
 
                     viewModel.threeDayForecast.value.data!!.forEach { singleDayForecast ->
