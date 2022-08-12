@@ -41,13 +41,13 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             when (viewModel.hasSavedLatAndLon.value) {
                 is Error -> {
-                    Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
                             .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
                             .background(Color.Red.copy(alpha = 0.5f))
                             .border(
@@ -55,33 +55,87 @@ fun HomeScreen(
                                 color = Color.Red,
                                 shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
                             )
-                            .requiredHeight(64.dp)
                             .clickable {
                                 navController.navigate(Setting_ROUTE)
-                            },
+                            }
+                            .padding(16.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Select location")
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
                 else -> {}
             }
 
-            Text("Home")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                    .background(Color.Blue.copy(alpha = 0.5f))
+                    .border(
+                        width = 1.dp,
+                        color = Color.Blue,
+                        shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                    )
+                    .heightIn(min = 128.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                when (viewModel.currentDayForecast.value) {
+                    is Success -> {
+                        Text(viewModel.currentDayForecast.value.data!![0].cityName)
 
-            Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(64.dp))
 
-            when (viewModel.currentDayForecast.value) {
+                        Text(viewModel.currentDayForecast.value.data!![0].temperature)
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(viewModel.currentDayForecast.value.data!![0].description)
+                    }
+                    is Empty -> {
+                        Text("No Location selected")
+                    }
+                    else -> {}
+                }
+            }
+
+            when (viewModel.threeDayForecast.value) {
                 is Success -> {
-                    Text("success")
+
+                    viewModel.threeDayForecast.value.data!!.forEach { singleDayForecast ->
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                                .background(Color.Blue.copy(alpha = 0.5f))
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.Blue,
+                                    shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                                )
+                                .padding(16.dp)
+                        ) {
+                            Text(singleDayForecast.date)
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Text(singleDayForecast.description)
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Text(singleDayForecast.temperature)
+                        }
+                    }
                 }
-                is Empty -> {
-                    Text("empty")
-                }
-                else -> {
-                    Text("else")
-                }
+                else -> {}
             }
 
             Spacer(modifier = Modifier.height(16.dp))
