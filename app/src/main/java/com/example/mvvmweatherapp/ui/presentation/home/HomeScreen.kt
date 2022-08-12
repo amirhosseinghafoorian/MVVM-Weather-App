@@ -48,12 +48,12 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                            .clip(MaterialTheme.shapes.medium)
                             .background(Color.Red.copy(alpha = 0.5f))
                             .border(
                                 width = 1.dp,
                                 color = Color.Red,
-                                shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                                shape = MaterialTheme.shapes.medium
                             )
                             .clickable {
                                 navController.navigate(Setting_ROUTE)
@@ -73,14 +73,17 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                    .clip(MaterialTheme.shapes.medium)
                     .background(Color.Blue.copy(alpha = 0.5f))
                     .border(
                         width = 1.dp,
                         color = Color.Blue,
-                        shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                        shape = MaterialTheme.shapes.medium
                     )
                     .heightIn(min = 128.dp)
+                    .clickable {
+                        navController.navigate(Setting_ROUTE)
+                    }
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -114,12 +117,12 @@ fun HomeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.medium.copy(CornerSize(16.dp)))
+                                .clip(MaterialTheme.shapes.medium)
                                 .background(Color.Blue.copy(alpha = 0.5f))
                                 .border(
                                     width = 1.dp,
                                     color = Color.Blue,
-                                    shape = MaterialTheme.shapes.medium.copy(CornerSize(16.dp))
+                                    shape = MaterialTheme.shapes.medium
                                 )
                                 .padding(16.dp)
                         ) {

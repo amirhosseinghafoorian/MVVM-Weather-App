@@ -56,7 +56,7 @@ class SettingViewModel @Inject constructor(
             },
             onError = { exception ->
                 if (exception is IndexOutOfBoundsException) {
-                    showSnackbar("Invalid cityName")
+                    showSnackbar("Invalid city name")
                 } else {
                     showSnackbar("Internet problem")
                 }

@@ -3,17 +3,21 @@ package com.example.mvvmweatherapp.ui.presentation.setting
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mvvmweatherapp.ui.components.AppButton
+import com.example.mvvmweatherapp.ui.components.AppScaffold
+import com.example.mvvmweatherapp.ui.components.AppTextField
 import com.example.mvvmweatherapp.ui.components.SnackbarObserver
 import com.example.mvvmweatherapp.ui.util.Resource.*
 
@@ -63,8 +67,13 @@ fun SettingScreen(
         snackbarFlow = viewModel.snackbarFlow
     )
 
-    Scaffold(scaffoldState = scaffoldState) {
-        Column {
+    AppScaffold(scaffoldState = scaffoldState) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             Text("select your location type")
 
@@ -73,11 +82,13 @@ fun SettingScreen(
             Row(modifier = Modifier.fillMaxWidth()) {
                 when (viewModel.isLocationFromGPS.value) {
                     is Empty, is Success -> {
-                        Button(
-                            modifier = Modifier.background(
-                                if (viewModel.isLocationFromGPS.value.data == true) Color.Green
-                                else Color.Red
-                            ),
+                        AppButton(
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = if (viewModel.isLocationFromGPS.value.data == true) {
+                                MaterialTheme.colors.secondary
+                            } else {
+                                MaterialTheme.colors.primary
+                            },
                             onClick = {
                                 viewModel.changeLocationType(true)
                                 permissionLauncher.launch(
@@ -91,16 +102,18 @@ fun SettingScreen(
                             Text("GPS")
                         }
 
-                        Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.width(16.dp))
 
-                        Button(
-                            modifier = Modifier.background(
-                                if (viewModel.isLocationFromGPS.value.data == false) Color.Green
-                                else Color.Red
-                            ),
+                        AppButton(
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = if (viewModel.isLocationFromGPS.value.data == false) {
+                                MaterialTheme.colors.secondary
+                            } else {
+                                MaterialTheme.colors.primary
+                            },
                             onClick = {
                                 viewModel.changeLocationType(false)
-                            }
+                            },
                         ) {
                             Text("Input city name")
                         }
@@ -114,14 +127,36 @@ fun SettingScreen(
 
             when (viewModel.cityName.value) {
                 is Success -> {
+
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text("city name is : ")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colors.primary,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .heightIn(min = 64.dp)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Your selected city",
+                            style = MaterialTheme.typography.subtitle1
+                        )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                        Text(viewModel.cityName.value.data!!)
+                        Text(
+                            text = viewModel.cityName.value.data!!,
+                            style = MaterialTheme.typography.h2.copy(
+                                color = MaterialTheme.colors.secondary
+                            ),
+                        )
                     }
                 }
                 is Loading -> {
@@ -130,19 +165,21 @@ fun SettingScreen(
                 else -> {}
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
             if (viewModel.isLocationFromGPS.value.data == false) {
-                TextField(
+                AppTextField(
                     value = textFieldValue,
                     onValueChange = {
                         textFieldValue = it
-                    }
+                    },
+                    placeholder = "Enter city name"
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
+                AppButton(
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         viewModel.getCityLocation(textFieldValue)
                         textFieldValue = ""
