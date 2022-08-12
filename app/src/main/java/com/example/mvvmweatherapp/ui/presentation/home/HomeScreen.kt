@@ -4,8 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +37,20 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     AppScaffold(
-        topBarPageName = "Home"
+        topBarPageName = "Home",
+        topBarTrailingIcon = {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        navController.navigate(Setting_ROUTE)
+                    }
+                    .padding(16.dp),
+                tint = MaterialTheme.colors.onSurface
+            )
+        }
     ) {
         Column(
             modifier = Modifier
@@ -81,9 +97,6 @@ fun HomeScreen(
                         shape = MaterialTheme.shapes.medium
                     )
                     .heightIn(min = 128.dp)
-                    .clickable {
-                        navController.navigate(Setting_ROUTE)
-                    }
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
