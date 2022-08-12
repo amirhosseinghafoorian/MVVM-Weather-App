@@ -48,20 +48,29 @@ class SettingViewModel @Inject constructor(
         )
     }
 
-    fun getCityLocation(cityName: String) {
-        if (cityName.isNotBlank()) {
+    fun getCityLocation(newCityName: String) {
+        if (newCityName.isNotBlank()) {
             makeSuspendCall(
                 block = {
-                    remoteRepository.getCityLocationFromName(cityName)
+                    remoteRepository.getCityLocationFromName(newCityName)
                 },
                 onSuccess = {
                     saveLatAndLon(it.first, it.second)
                 },
                 onError = { exception ->
+                    viewModelScope.launch {
+                        if (cityName.value is Loading) _cityName.value =
+                            Error(exception.message.toString())
+                    }
                     if (exception is IndexOutOfBoundsException) {
                         showSnackbar("Invalid city name")
                     } else {
                         showSnackbar("Internet problem")
+                    }
+                },
+                onLoading = {
+                    viewModelScope.launch {
+                        if (cityName.value is Empty) _cityName.value = Loading()
                     }
                 }
             )

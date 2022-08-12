@@ -75,9 +75,12 @@ fun SettingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text("select your location type")
+            Text(
+                text = "select your location type",
+                style = MaterialTheme.typography.h5
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 when (viewModel.isLocationFromGPS.value) {
@@ -160,7 +163,27 @@ fun SettingScreen(
                     }
                 }
                 is Loading -> {
-                    CircularProgressIndicator()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "please wait",
+                            style = MaterialTheme.typography.subtitle1.copy(
+                                color = MaterialTheme.colors.primary
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
                 }
                 else -> {}
             }
