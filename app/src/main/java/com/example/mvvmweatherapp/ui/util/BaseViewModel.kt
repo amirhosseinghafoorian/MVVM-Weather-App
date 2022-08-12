@@ -13,7 +13,7 @@ abstract class BaseViewModel : ViewModel() {
     private val _snackbarFlow = MutableSharedFlow<String>()
     val snackbarFlow = _snackbarFlow.asSharedFlow()
 
-    protected fun showSnackbar(value: String) {
+    fun showSnackbar(value: String) {
         viewModelScope.launch {
             _snackbarFlow.emit(value)
         }

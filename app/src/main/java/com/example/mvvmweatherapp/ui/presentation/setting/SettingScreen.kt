@@ -54,13 +54,13 @@ fun SettingScreen(
         if (isAllPermissionsGranted) {
             viewModel.getCurrentLocation()
         } else {
-            // todo show snackbar permissions not granted"
+            viewModel.showSnackbar("location permission denied")
         }
     }
 
     val scaffoldState = rememberScaffoldState()
     var textFieldValue by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current // todo maybe change
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     SnackbarObserver(
         scaffoldState = scaffoldState,

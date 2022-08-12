@@ -32,38 +32,6 @@ class SettingViewModel @Inject constructor(
         getSavedLatAndLon()
     }
 
-    private fun getCityName(latitude: Double, longitude: Double) {
-        makeSuspendCall(
-            block = {
-                remoteRepository.getCityNameFromLocation(latitude, longitude)
-            },
-            onSuccess = {
-                _cityName.value = Success(it)
-            },
-            onLoading = {
-                _cityName.value = Loading()
-            }
-        )
-    }
-
-    fun getCityLocation(cityName: String) {
-        makeSuspendCall(
-            block = {
-                remoteRepository.getCityLocationFromName(cityName)
-            },
-            onSuccess = {
-                saveLatAndLon(it.first, it.second)
-            },
-            onError = { exception ->
-                if (exception is IndexOutOfBoundsException) {
-                    showSnackbar("Invalid city name")
-                } else {
-                    showSnackbar("Internet problem")
-                }
-            }
-        )
-    }
-
     fun getCurrentLocation() {
         makeSuspendCall(
             block = {
@@ -73,16 +41,60 @@ class SettingViewModel @Inject constructor(
                 location?.let {
                     saveLatAndLon(it.latitude, it.longitude)
                 } ?: run {
-                    // todo location failed"
+                    showSnackbar("location currently unavailable for android 12 or higher")
+                    changeLocationType(false)
                 }
             }
         )
     }
 
-    private fun saveLatAndLon(latitude: Double, longitude: Double) {
+    fun getCityLocation(cityName: String) {
+        if (cityName.isNotBlank()) {
+            makeSuspendCall(
+                block = {
+                    remoteRepository.getCityLocationFromName(cityName)
+                },
+                onSuccess = {
+                    saveLatAndLon(it.first, it.second)
+                },
+                onError = { exception ->
+                    if (exception is IndexOutOfBoundsException) {
+                        showSnackbar("Invalid city name")
+                    } else {
+                        showSnackbar("Internet problem")
+                    }
+                }
+            )
+        } else {
+            showSnackbar("city name cannot be empty")
+        }
+    }
+
+    fun changeLocationType(newLocationType: Boolean) {
+        if (newLocationType != isLocationFromGPS.value.data) {
+            makeSuspendCall(
+                block = {
+                    localRepository.changeLocationType(newLocationType)
+                }
+            )
+        }
+    }
+
+    private fun getLocationType() {
         makeSuspendCall(
             block = {
-                localRepository.saveLatAndLon(latitude, longitude)
+                localRepository.getLocationType()
+            },
+            onSuccess = { resultFlow ->
+                viewModelScope.launch {
+                    resultFlow.collect { value ->
+                        value?.let {
+                            _isLocationFromGPS.value = Success(it)
+                        } ?: run {
+                            _isLocationFromGPS.value = Empty()
+                        }
+                    }
+                }
             }
         )
     }
@@ -104,34 +116,26 @@ class SettingViewModel @Inject constructor(
         )
     }
 
-    private fun getLocationType() {
+    private fun getCityName(latitude: Double, longitude: Double) {
         makeSuspendCall(
             block = {
-                localRepository.getLocationType()
+                remoteRepository.getCityNameFromLocation(latitude, longitude)
             },
-            onSuccess = { resultFlow ->
-                viewModelScope.launch {
-                    resultFlow.collect { value ->
-                        value?.let {
-                            _isLocationFromGPS.value = Success(it)
-
-                        } ?: run {
-                            _isLocationFromGPS.value = Empty()
-                        }
-                    }
-                }
+            onSuccess = {
+                _cityName.value = Success(it)
+            },
+            onLoading = {
+                _cityName.value = Loading()
             }
         )
     }
 
-    fun changeLocationType(newLocationType: Boolean) {
-        if (newLocationType != isLocationFromGPS.value.data) {
-            makeSuspendCall(
-                block = {
-                    localRepository.changeLocationType(newLocationType)
-                }
-            )
-        }
+    private fun saveLatAndLon(latitude: Double, longitude: Double) {
+        makeSuspendCall(
+            block = {
+                localRepository.saveLatAndLon(latitude, longitude)
+            }
+        )
     }
 
 }

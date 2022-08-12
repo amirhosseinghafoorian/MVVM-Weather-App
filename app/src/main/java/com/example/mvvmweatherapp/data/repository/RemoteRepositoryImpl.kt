@@ -56,8 +56,6 @@ class RemoteRepositoryImpl @Inject constructor(
             )
             insertThreeDayForecast(resultFiveDay)
 
-        } else {
-            // todo maybe throw exception
         }
     }
 
