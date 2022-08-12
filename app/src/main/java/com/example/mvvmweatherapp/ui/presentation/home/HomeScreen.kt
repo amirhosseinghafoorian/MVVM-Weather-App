@@ -91,7 +91,7 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.height(64.dp))
 
-                        Text(viewModel.currentDayForecast.value.data!![0].temperature)
+                        Text(viewModel.currentDayForecast.value.data!![0].temperature + " °C")
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -131,7 +131,7 @@ fun HomeScreen(
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            Text(singleDayForecast.temperature)
+                            Text(singleDayForecast.temperature + " °C")
                         }
                     }
                 }
