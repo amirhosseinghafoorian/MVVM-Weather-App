@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">MVVM Weather App</string>
+
+    <string name="label_setting">Setting</string>
+    <string name="label_select_location_type">Select your location type</string>
+    <string name="label_gps">GPS</string>
+    <string name="label_input_city_name">Input city name</string>
+    <string name="label_your_selected_city">Your selected city</string>
+    <string name="label_please_wait">Please wait</string>
+    <string name="label_enter_city_name">Enter city name</string>
+    <string name="label_confirm">Confirm</string>
+
+    <string name="label_home">Home</string>
+    <string name="label_select_location">Select Location</string>
+    <string name="label_no_location_selected">No Location selected</string>
+
+    <string name="celsius_sign"> °C</string>
 </resources>

@@ -16,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mvvmweatherapp.R
 import com.example.mvvmweatherapp.navigation.AppScreens.Setting_ROUTE
 import com.example.mvvmweatherapp.ui.components.AppScaffold
 import com.example.mvvmweatherapp.ui.components.SnackbarObserver
@@ -49,7 +51,7 @@ fun HomeScreen(
 
     AppScaffold(
         scaffoldState = scaffoldState,
-        topBarPageName = "Home",
+        topBarPageName = stringResource(R.string.label_home),
         topBarTrailingIcon = {
             Icon(
                 imageVector = Icons.Default.Settings,
@@ -90,7 +92,7 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Select location")
+                        Text(stringResource(R.string.label_select_location))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -119,14 +121,14 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.height(64.dp))
 
-                        Text(viewModel.currentDayForecast.value.data!![0].temperature + " °C")
+                        Text(viewModel.currentDayForecast.value.data!![0].temperature + stringResource(R.string.celsius_sign))
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(viewModel.currentDayForecast.value.data!![0].description)
                     }
                     is Empty -> {
-                        Text("No Location selected")
+                        Text(stringResource(R.string.label_no_location_selected))
                     }
                     else -> {}
                 }
@@ -159,16 +161,12 @@ fun HomeScreen(
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            Text(singleDayForecast.temperature + " °C")
+                            Text(singleDayForecast.temperature + stringResource(R.string.celsius_sign))
                         }
                     }
                 }
                 else -> {}
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // todo weather ui
         }
     }
 }

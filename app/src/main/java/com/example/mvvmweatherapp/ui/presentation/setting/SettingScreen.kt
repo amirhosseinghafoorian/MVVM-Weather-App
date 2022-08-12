@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mvvmweatherapp.R
 import com.example.mvvmweatherapp.ui.components.AppButton
 import com.example.mvvmweatherapp.ui.components.AppScaffold
 import com.example.mvvmweatherapp.ui.components.AppTextField
@@ -73,7 +75,7 @@ fun SettingScreen(
 
     AppScaffold(
         scaffoldState = scaffoldState,
-        topBarPageName = "Setting",
+        topBarPageName = stringResource(R.string.label_setting),
         topBarLeadingIcon = {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -96,7 +98,7 @@ fun SettingScreen(
         ) {
 
             Text(
-                text = "select your location type",
+                text = stringResource(R.string.label_select_location_type),
                 style = MaterialTheme.typography.h5
             )
 
@@ -122,7 +124,7 @@ fun SettingScreen(
                                 )
                             }
                         ) {
-                            Text("GPS")
+                            Text(stringResource(R.string.label_gps))
                         }
 
                         Spacer(modifier = Modifier.width(16.dp))
@@ -138,7 +140,7 @@ fun SettingScreen(
                                 viewModel.changeLocationType(false)
                             },
                         ) {
-                            Text("Input city name")
+                            Text(stringResource(R.string.label_input_city_name))
                         }
                     }
                     is Loading -> {
@@ -167,7 +169,7 @@ fun SettingScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Your selected city",
+                            text = stringResource(R.string.label_your_selected_city),
                             style = MaterialTheme.typography.subtitle1
                         )
 
@@ -190,7 +192,7 @@ fun SettingScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "please wait",
+                            text = stringResource(R.string.label_please_wait),
                             style = MaterialTheme.typography.subtitle1.copy(
                                 color = MaterialTheme.colors.primary
                             )
@@ -215,7 +217,7 @@ fun SettingScreen(
                     onValueChange = {
                         textFieldValue = it
                     },
-                    placeholder = "Enter city name"
+                    placeholder = stringResource(R.string.label_enter_city_name)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -228,7 +230,7 @@ fun SettingScreen(
                         keyboardController?.hide()
                     }
                 ) {
-                    Text("confirm")
+                    Text(stringResource(R.string.label_confirm))
                 }
             }
         }
