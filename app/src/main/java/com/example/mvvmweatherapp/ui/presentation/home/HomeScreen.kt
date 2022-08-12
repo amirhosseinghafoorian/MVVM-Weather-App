@@ -48,7 +48,7 @@ fun HomeScreen(
                         navController.navigate(Setting_ROUTE)
                     }
                     .padding(16.dp),
-                tint = MaterialTheme.colors.onSurface
+                tint = Color.White
             )
         }
     ) {

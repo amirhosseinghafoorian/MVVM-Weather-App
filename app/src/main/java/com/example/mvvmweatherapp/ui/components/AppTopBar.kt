@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -41,7 +42,7 @@ fun AppTopBar(
             Text(
                 text = name,
                 style = MaterialTheme.typography.h6.copy(
-                    color = MaterialTheme.colors.onSurface
+                    color = Color.White
                 )
             )
         }

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,7 +84,7 @@ fun SettingScreen(
                         navController.navigateUp()
                     }
                     .padding(16.dp),
-                tint = MaterialTheme.colors.onSurface
+                tint = Color.White
             )
         }
     ) {
