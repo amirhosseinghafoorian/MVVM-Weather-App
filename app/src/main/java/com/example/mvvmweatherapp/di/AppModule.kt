@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.work.WorkManager
 import com.example.mvvmweatherapp.ui.components.InternetNotifier
 import com.example.mvvmweatherapp.ui.components.network_broadcast_receiver.NetworkChangeReceiver
 import com.example.mvvmweatherapp.ui.components.network_state_monitor.NetworkMonitorCallback
@@ -72,5 +73,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideInternetNotifier() = InternetNotifier()
+
+    @Singleton
+    @Provides
+    fun provideWorkManager(
+        @ApplicationContext context: Context
+    ) = WorkManager.getInstance(context)
 
 }

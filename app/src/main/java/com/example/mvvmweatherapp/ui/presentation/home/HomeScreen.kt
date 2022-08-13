@@ -121,7 +121,11 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.height(64.dp))
 
-                        Text(viewModel.currentDayForecast.value.data!![0].temperature + stringResource(R.string.celsius_sign))
+                        Text(
+                            viewModel.currentDayForecast.value.data!![0].temperature + stringResource(
+                                R.string.celsius_sign
+                            )
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 

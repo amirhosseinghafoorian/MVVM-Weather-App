@@ -33,6 +33,11 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
         <receiver android:name=".ui.components.network_broadcast_receiver.NetworkChangeReceiver"
             android:exported="false">
             <intent-filter>
