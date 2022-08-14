@@ -1,4 +1,4 @@
-This is an Compose MVVM Weather app powered by open weather api
+This is an Compose MVVM Weather app powered by openweathermap api
 
 ------------------------------------------------------------------------
 
