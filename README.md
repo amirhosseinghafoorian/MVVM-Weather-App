@@ -2,7 +2,7 @@ This is an Compose MVVM Weather app powered by openweathermap api
 
 ------------------------------------------------------------------------
 
-Note that you need do the following steps to run the project:
+Note that you need to do the following steps to run the project
 
 1- Go to https://openweathermap.org and create an account for free
 
