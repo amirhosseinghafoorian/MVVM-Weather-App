@@ -131,6 +131,7 @@ class HomeViewModelUnitTest {
 
             withContext(Dispatchers.IO) {
                 coVerify(exactly = 1) { localRepository.getSavedLatAndLon() }
+                coVerify(exactly = 1) { remoteRepository.updateForecastData() }
             }
         }
     }
@@ -209,7 +210,6 @@ class HomeViewModelUnitTest {
         }
 
     }
-
 
     private fun createViewModel(): HomeViewModel {
         return HomeViewModel(
