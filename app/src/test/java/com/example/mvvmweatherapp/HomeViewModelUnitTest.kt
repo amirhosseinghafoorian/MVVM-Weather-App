@@ -41,11 +41,9 @@ class HomeViewModelUnitTest {
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        Dispatchers.setMain(mainThreadSurrogate)
     }
 
     @Test
