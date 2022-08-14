@@ -61,7 +61,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertEquals(
-                Resource.Success(testCast)::class.java,
+                Resource.Success::class.java,
                 viewModel.currentDayForecast.value::class.java
             )
 
@@ -92,7 +92,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertEquals(
-                Resource.Success(testCast)::class.java,
+                Resource.Success::class.java,
                 viewModel.threeDayForecast.value::class.java
             )
             assertEquals(
@@ -119,7 +119,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertEquals(
-                Resource.Success(Unit)::class.java,
+                Resource.Success::class.java,
                 viewModel.hasSavedLatAndLon.value::class.java
             )
             assertEquals(
@@ -147,7 +147,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertEquals(
-                Resource.Empty<CurrentForecast>()::class.java,
+                Resource.Empty::class.java,
                 viewModel.currentDayForecast.value::class.java
             )
 
@@ -170,7 +170,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertEquals(
-                Resource.Empty<SingleDayForecast>()::class.java,
+                Resource.Empty::class.java,
                 viewModel.threeDayForecast.value::class.java
             )
 
@@ -198,7 +198,7 @@ class HomeViewModelUnitTest {
             delay(100)
 
             assertSame(
-                Resource.Error<Unit>("")::class.java,
+                Resource.Error::class.java,
                 viewModel.hasSavedLatAndLon.value::class.java
             )
 
